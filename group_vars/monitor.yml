@@ -1,0 +1,2 @@
+app_dir: /home/ubuntu/ssd1/deploy
+compose_src: docker-compose.yml.j2

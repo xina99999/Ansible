@@ -1,0 +1,97 @@
+- name: Deploy Prometheus and Grafana with Docker Compose
+  hosts: prometheus_servers
+  become: yes
+#  vars:
+#    app_dir: /home/ubuntu/ssd1/deploy
+#    compose_src: docker-compose.yml
+  tasks:
+    - name: Ensure Python3 and pip are installed (Debian/Ubuntu)
+      apt:
+        name:
+          - python3
+          - python3-pip
+          - curl
+        state: present
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Ensure Python3 and pip are installed (RedHat/CentOS)
+      yum:
+        name:
+          - python3
+          - python3-pip
+          - curl
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Install Docker using convenience script (if missing)
+      shell: curl -fsSL https://get.docker.com | sh
+      args:
+        creates: /usr/bin/docker
+
+    - name: Install Docker Compose plugin
+      apt:
+        name: docker-compose
+        state: present
+        update_cache: yes
+      become: yes
+
+    - name: Create application directory
+      file:
+        path: "{{ app_dir }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Copy docker-compose.yml
+      copy:
+        src: "{{ compose_src }}"
+        dest: "{{ app_dir }}/docker-compose.yml"
+        mode: '0644'
+
+    - name: Create Prometheus directory
+      file:
+        path: "{{ app_dir }}/prometheus"
+        state: directory
+        mode: '0755'
+      become: yes
+
+    - name: Create Grafana directory
+      file:
+        path: "{{ app_dir }}/grafana"
+        state: directory
+        mode: '0755'
+      become: yes
+
+    - name: Copy Prometheus config
+      copy:
+        src: prometheus/prometheus.yml
+        dest: "{{ app_dir }}/prometheus/prometheus.yml"
+        mode: '0644'
+
+    - name: Copy Grafana provisioning
+      copy:
+        src: grafana/provisioning
+        dest: "{{ app_dir }}/grafana/provisioning"
+        mode: '0644'
+
+    - name: Stop services with docker-compose
+      command: docker compose down
+      args:
+        chdir: "{{ app_dir }}"
+
+    - name: Start services with docker-compose
+      command: docker compose up -d
+      args:
+        chdir: "{{ app_dir }}"
+
+    - name: Ensure docker-compose services are running (simple check)
+      shell: docker compose ps
+      args:
+        chdir: "{{ app_dir }}"
+      register: compose_ps
+
+    - name: Show docker-compose ps
+      debug:
+        var: compose_ps.stdout

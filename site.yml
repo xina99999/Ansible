@@ -1,0 +1,9 @@
+- name: Deploy Prometheus and Grafana with Docker Compose
+  hosts: monitor
+  become: yes
+  roles:
+    # - generate-password
+    - docker
+    - prometheus
+    - grafana
+    - node_exporter
