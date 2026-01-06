@@ -1,6 +1,6 @@
 - name: Create application directory
   file:
-    path: "{{ app_dir }}"
+    path: "{{ APP_DIR }}"
     state: directory
     owner: root
     group: root
@@ -8,34 +8,34 @@
 
 - name: Create Grafana directory
   file:
-    path: "{{ app_dir }}/grafana"
+    path: "{{ APP_DIR }}/grafana"
     state: directory
     mode: '0755'
 
 - name: Copy docker-compose.yml
   template:
-    src: "{{ compose_src }}"
-    dest: "{{ app_dir }}/grafana/docker-compose.yml"
+    src: "{{ COMPOSE_SRC }}"
+    dest: "{{ APP_DIR }}/grafana/docker-compose.yml"
     mode: '0644'
 
 - name: Create Grafana directory
   file:
-    path: "{{ app_dir }}/grafana"
+    path: "{{ APP_DIR }}/grafana"
     state: directory
     mode: '0755'
 
 - name: Copy Grafana provisioning
   copy:
     src: provisioning/
-    dest: "{{ app_dir }}/grafana/provisioning"
+    dest: "{{ APP_DIR }}/grafana/provisioning"
     mode: '0644'
 
 - name: Stop services with docker-compose
   command: docker compose down
   args:
-    chdir: "{{ app_dir }}/grafana"
+    chdir: "{{ APP_DIR }}/grafana"
 
 - name: Start services with docker-compose
   command: docker compose up -d
   args:
-    chdir: "{{ app_dir }}/grafana"
+    chdir: "{{ APP_DIR }}/grafana"

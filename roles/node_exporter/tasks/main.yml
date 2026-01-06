@@ -1,6 +1,6 @@
 - name: Create application directory
   file:
-    path: "{{ app_dir }}"
+    path: "{{ APP_DIR }}"
     state: directory
     owner: root
     group: root
@@ -8,28 +8,28 @@
 
 - name: Create Node_exporter directory
   file:
-    path: "{{ app_dir }}/node_exporter"
+    path: "{{ APP_DIR }}/node_exporter"
     state: directory
     mode: '0755'
 
 - name: Copy docker-compose.yml
   template:
-    src: "{{ compose_src }}"
-    dest: "{{ app_dir }}/node_exporter/docker-compose.yml"
+    src: "{{ COMPOSE_SRC }}"
+    dest: "{{ APP_DIR }}/node_exporter/docker-compose.yml"
     mode: '0644'
 
 - name: Create Grafana directory
   file:
-    path: "{{ app_dir }}/node_exporter"
+    path: "{{ APP_DIR }}/node_exporter"
     state: directory
     mode: '0755'
 
 - name: Stop services with docker-compose
   command: docker compose down
   args:
-    chdir: "{{ app_dir }}/node_exporter"
+    chdir: "{{ APP_DIR }}/node_exporter"
 
 - name: Start services with docker-compose
   command: docker compose up -d
   args:
-    chdir: "{{ app_dir }}/node_exporter"
+    chdir: "{{ APP_DIR }}/node_exporter"

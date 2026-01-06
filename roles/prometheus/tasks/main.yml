@@ -1,6 +1,6 @@
 - name: Create application directory
   file:
-    path: "{{ app_dir }}"
+    path: "{{ APP_DIR }}"
     state: directory
     owner: root
     group: root
@@ -8,7 +8,7 @@
 
 - name: Create Prometheus directory
   file:
-    path: "{{ app_dir }}/prometheus"
+    path: "{{ APP_DIR }}/prometheus"
     state: directory
     mode: '0755'
 
@@ -16,21 +16,21 @@
 - name: Copy Prometheus config
   template:
     src: prometheus.yml.j2
-    dest: "{{ app_dir }}/prometheus/prometheus.yml"
+    dest: "{{ APP_DIR }}/prometheus/prometheus.yml"
     mode: '0644'
 
 - name: Copy docker-compose.yml
   template:
-    src: "{{ compose_src }}"
-    dest: "{{ app_dir }}/prometheus/docker-compose.yml"
+    src: "{{ COMPOSE_SRC }}"
+    dest: "{{ APP_DIR }}/prometheus/docker-compose.yml"
     mode: '0644'
 
 - name: Stop services with docker-compose
   command: docker compose down
   args:
-    chdir: "{{ app_dir }}/prometheus"
+    chdir: "{{ APP_DIR }}/prometheus"
 
 - name: Start services with docker-compose
   command: docker compose up -d
   args:
-    chdir: "{{ app_dir }}/prometheus"
+    chdir: "{{ APP_DIR }}/prometheus"
