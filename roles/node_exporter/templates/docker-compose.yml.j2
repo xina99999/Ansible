@@ -1,8 +1,8 @@
 services:
   node-exporter:
-    image: prom/node-exporter:v1.9.1
+    image: {{ images.node_exporter }}
     container_name: node-exporter
-    restart: unless-stopped
+    restart: {{ restart_policy }}
     command:
       - '--path.procfs=/host/proc'
       - '--path.rootfs=/rootfs'
@@ -16,8 +16,8 @@ services:
       - /sys:/host/sys:ro
       - /:/rootfs:ro
     networks:
-      - ai_bridge_network
+      - {{ network_name }}
 
 networks:
-  ai_bridge_network:
+  {{ network_name }}:
     external: true

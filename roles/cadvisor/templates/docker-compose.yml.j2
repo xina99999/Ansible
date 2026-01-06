@@ -1,6 +1,6 @@
 services:
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    image: {{ images.cadvisor }}
     container_name: cadvisor
     restart: unless-stopped
     volumes:
@@ -14,5 +14,5 @@ services:
       - /dev/kmsg
 networks:
   default:
-    name: ai_bridge_network
+    name: {{ network_name }}
     external: true

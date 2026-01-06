@@ -1,6 +1,6 @@
 services:
   dcgm-exporter:
-    image: nvcr.io/nvidia/k8s/dcgm-exporter:3.3.5-3.4.0-ubuntu22.04
+    image: {{ images.dcgm_exporter }}
     container_name: dcgm-exporter
     restart: unless-stopped
     ports:
@@ -20,5 +20,5 @@ services:
 
 networks:
   default:
-    name: ai_bridge_network
+    name: {{ network_name }}
     external: true

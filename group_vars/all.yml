@@ -1,7 +1,4 @@
-PIPELINE_NAME: lfvn
-APP_DIR: /home/ubuntu/ssd1/{{ PIPELINE_NAME }}
-COMPOSE_SRC: docker-compose.yml.j2
-
+---
 # Centralized variables for images, network, volumes and common policies
 network_name: ai_bridge_network
 restart_policy: unless-stopped
@@ -21,3 +18,13 @@ volumes:
   grafana: grafana_data
   prometheus: prometheus_data
   kafka: kafka_data
+
+# placeholders for templates that already use other variable styles
+placeholders:
+  tarsier_image: ""
+  triton_image: ""
+  cloud_image: ""
+  evidence_image: ""
+  ds_image: ""
+  mhe10_postprocess_image: ""
+  eme_agent_image: ""

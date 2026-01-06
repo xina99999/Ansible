@@ -1,6 +1,6 @@
 services:
   nvidia_smi_exporter:
-    image: utkuozdemir/nvidia_gpu_exporter:1.1.0
+    image: {{ images.nvidia_gpu_exporter }}
     container_name: nvidia_smi_exporter
     restart: unless-stopped
     devices:

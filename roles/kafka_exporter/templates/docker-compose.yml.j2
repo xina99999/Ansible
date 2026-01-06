@@ -1,6 +1,6 @@
 services:
   kafka_exporter:
-    image: danielqsj/kafka-exporter:v1.9.0
+    image: {{ images.kafka_exporter }}
     container_name: kafka_exporter
     command:
       - --kafka.server=kafka:9092
@@ -8,8 +8,8 @@ services:
       - "9308"
     restart: unless-stopped
     networks:
-      - ai_bridge_network
+      - {{ network_name }}
 
 networks:
-  ai_bridge_network:
+  {{ network_name }}:
     external: true

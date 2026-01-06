@@ -1,20 +1,20 @@
 services:
   prometheus:
-    image: prom/prometheus:latest
+    image: {{ images.prometheus }}
     container_name: prometheus
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - prometheus_data:/prometheus
+      - {{ volumes.prometheus }}:/prometheus
     ports:
       - "9090:9090"
     restart: unless-stopped
     networks:
-      - ai_bridge_network
+      - {{ network_name }}
 
 networks:
-  ai_bridge_network:
+  {{ network_name }}:
     external: true
 
 volumes:
-  prometheus_data:
+  {{ volumes.prometheus }}:
 
