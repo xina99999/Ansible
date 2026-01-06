@@ -7,3 +7,6 @@
     - prometheus
     - grafana
     - node_exporter
+    - kafka_exporter
+    - nvidia-gpu-exporter
+    - cadvisor
