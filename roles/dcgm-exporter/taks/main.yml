@@ -1,0 +1,35 @@
+- name: Create application directory
+  file:
+    path: "{{ APP_DIR }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Create DCGM exporter directory
+  file:
+    path: "{{ APP_DIR }}/dcgm-exporter"
+    state: directory
+    mode: '0755'
+
+- name: Copy docker-compose.yml
+  template:
+    src: "{{ COMPOSE_SRC }}"
+    dest: "{{ APP_DIR }}/dcgm-exporter/docker-compose.yml"
+    mode: '0644'
+
+- name: Create DCGM exporter directory
+  file:
+    path: "{{ APP_DIR }}/dcgm-exporter"
+    state: directory
+    mode: '0755'
+
+- name: Stop services with docker-compose
+  command: docker compose down
+  args:
+    chdir: "{{ APP_DIR }}/dcgm-exporter"
+
+- name: Start services with docker-compose
+  command: docker compose up -d
+  args:
+    chdir: "{{ APP_DIR }}/dcgm-exporter"

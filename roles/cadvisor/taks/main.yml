@@ -1,0 +1,35 @@
+- name: Create application directory
+  file:
+    path: "{{ APP_DIR }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Create cadvisor directory
+  file:
+    path: "{{ APP_DIR }}/cadvisor"
+    state: directory
+    mode: '0755'
+
+- name: Copy docker-compose.yml
+  template:
+    src: "{{ COMPOSE_SRC }}"
+    dest: "{{ APP_DIR }}/cadvisor/docker-compose.yml"
+    mode: '0644'
+
+- name: Create cadvisor directory
+  file:
+    path: "{{ APP_DIR }}/cadvisor"
+    state: directory
+    mode: '0755'
+
+- name: Stop services with docker-compose
+  command: docker compose down
+  args:
+    chdir: "{{ APP_DIR }}/cadvisor"
+
+- name: Start services with docker-compose
+  command: docker compose up -d
+  args:
+    chdir: "{{ APP_DIR }}/cadvisor"
