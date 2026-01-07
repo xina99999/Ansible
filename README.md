@@ -24,8 +24,66 @@ Mô tả
 
 **Cài đặt & Chạy**
 1. Kiểm tra inventory trong [hosts](hosts) và điều chỉnh `group_vars/monitor.yml` theo môi trường của bạn.
-2. Chạy playbook:
 
+2. Add SSH key vào server cần chạy
+
+Trước tiên, đảm bảo  đã có SSH key (ví dụ: `id_rsa.pub` hoặc `rsa.pub`) trên máy local.
+
+ Bước 1: Copy SSH public key lên server
+
+Chạy lệnh sau trên **máy local**:
+
+```bash
+scp ~/.ssh/id_rsa.pub user@<SERVER_IP>:/tmp/id_rsa.pub
+```
+
+Ví dụ:
+
+```bash
+scp ~/.ssh/id_rsa.pub ubuntu@192.168.1.10:/tmp/id_rsa.pub
+```
+
+Nhập mật khẩu SSH của user trên server khi được yêu cầu.
+
+---
+
+Bước 2: Add key vào `authorized_keys` trên server
+
+SSH vào server:
+
+```bash
+ssh user@<SERVER_IP>
+```
+
+Sau đó chạy:
+
+```bash
+mkdir -p ~/.ssh
+cat /tmp/id_rsa.pub >> ~/.ssh/authorized_keys
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+```
+
+---
+
+Bước 3: Kiểm tra đăng nhập bằng SSH key
+
+Thoát khỏi server và thử đăng nhập lại:
+
+```bash
+ssh user@<SERVER_IP>
+```
+
+Nếu không bị hỏi mật khẩu → SSH key đã được cấu hình thành công 
+
+---
+
+3. Chạy test connect với server:
+```bash
+ansible <server> -i hots -m ping
+```
+Nếu chạy thành công nghĩa là connect kết nối được
+4. Chạy playbook:
 ```bash
 ansible-playbook -i hosts site.yml
 ```
@@ -40,11 +98,4 @@ Nếu playbook yêu cầu quyền sudo, thêm `-K` hoặc chạy với `--ask-be
 - Grafana có cấu hình datasource được đặt sẵn trong [roles/grafana/files/provisioning/datasources/datasources.yml](roles/grafana/files/provisioning/datasources/datasources.yml).
 - Prometheus template nằm ở [roles/prometheus/templates/prometheus.yml.j2](roles/prometheus/templates/prometheus.yml.j2).
 
-**Góp ý & Phát triển**
-- Mở issue hoặc gửi pull request để bổ sung role, cải thiện templates hoặc thêm tài liệu cấu hình.
 
-**License**
-- Tùy theo dự án — thêm file `LICENSE` nếu bạn muốn gắn license rõ ràng.
-
----
-Generated README — chỉnh tiếng Việt hoặc mở rộng nội dung theo môi trường cụ thể của bạn.
